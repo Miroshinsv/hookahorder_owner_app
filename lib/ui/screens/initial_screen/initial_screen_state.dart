@@ -1,6 +1,16 @@
 part of 'initial_screen_cubit.dart';
 
 @immutable
-abstract class InitialScreenState {}
+abstract class InitialScreenState {
+  final String text;
 
-class InitialScreenInitial extends InitialScreenState {}
+  const InitialScreenState(this.text);
+}
+
+class InitialScreenInitial extends InitialScreenState {
+  const InitialScreenInitial(super.text);
+}
+
+class InitialScreenError extends InitialScreenState {
+  const InitialScreenError(super.text);
+}
