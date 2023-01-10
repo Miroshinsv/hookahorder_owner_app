@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 
 ThemeData lightTheme() {
   return ThemeData(
+    fontFamily: "Montserrat",
+    disabledColor: const Color.fromRGBO(151, 193, 193, 1),
     textButtonTheme: TextButtonThemeData(
       style: ButtonStyle(
         shape: MaterialStateProperty.all(
