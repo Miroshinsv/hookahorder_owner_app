@@ -8,7 +8,7 @@ import 'package:hookahorder_owner_app/ui/services/auth_service/auth_service_inte
 import 'package:hookahorder_owner_app/ui/services/shared_preferences/shared_preferences_interface.dart';
 import 'package:injectable/injectable.dart';
 
-@Singleton(as: IAuthService, order: 1)
+@LazySingleton(as: IAuthService, order: 1)
 class AuthService implements IAuthService {
   final ISharedPreferences _preferences = GetIt.I.get();
   final AuthApi _authApi = GetIt.I.get<IApiClient>().getAuthApi();

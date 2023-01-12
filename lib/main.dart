@@ -1,3 +1,4 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
@@ -15,6 +16,7 @@ void main() async {
   configureDependencies();
   ISharedPreferences sharedPreferences = GetIt.I.get();
   await sharedPreferences.initPrefs();
+  await Firebase.initializeApp();
   runApp(
     MaterialApp(
       theme: lightTheme(),
