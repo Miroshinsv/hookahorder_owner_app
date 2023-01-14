@@ -4,6 +4,13 @@ ThemeData lightTheme() {
   return ThemeData(
     fontFamily: "Montserrat",
     disabledColor: const Color.fromRGBO(151, 193, 193, 1),
+    appBarTheme: const AppBarTheme(
+      color: Color.fromRGBO(39, 129, 129, 1),
+      centerTitle: true,
+      iconTheme: IconThemeData(
+        color: Colors.white,
+      )
+    ),
     textButtonTheme: TextButtonThemeData(
       style: ButtonStyle(
         shape: MaterialStateProperty.all(

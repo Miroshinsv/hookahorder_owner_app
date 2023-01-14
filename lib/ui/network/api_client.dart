@@ -1,8 +1,10 @@
 import 'package:chopper/chopper.dart';
 import 'package:hookahorder_owner_app/ui/models/address/address_model.dart';
 import 'package:hookahorder_owner_app/ui/models/authorization/auth_response.dart';
+import 'package:hookahorder_owner_app/ui/models/order/order_model.dart';
 import 'package:hookahorder_owner_app/ui/models/place/place_model.dart';
 import 'package:hookahorder_owner_app/ui/network/api/auth_api.dart';
+import 'package:hookahorder_owner_app/ui/network/api/order_api.dart';
 import 'package:hookahorder_owner_app/ui/network/api/place_api.dart';
 import 'package:hookahorder_owner_app/ui/network/api/user_api.dart';
 import 'package:hookahorder_owner_app/ui/network/api_client_interface.dart';
@@ -18,6 +20,7 @@ class ApiClient implements IApiClient {
         AuthResponse: AuthResponse.fromJson,
         PlaceModel: PlaceModel.fromJson,
         AddressModel: AddressModel.fromJson,
+        OrderModel: OrderModel.fromJson,
       },
     ),
     interceptors: [
@@ -28,6 +31,7 @@ class ApiClient implements IApiClient {
       AuthApi.create(),
       PlaceApi.create(),
       UserApi.create(),
+      OrderApi.create(),
     ],
   );
 
@@ -39,4 +43,7 @@ class ApiClient implements IApiClient {
 
   @override
   UserApi getUserApi() => _chopper.getService<UserApi>();
+
+  @override
+  getOrderApi() => _chopper.getService<OrderApi>();
 }

@@ -7,6 +7,7 @@ class SharedPreferenceService implements ISharedPreferences {
   late SharedPreferences _preferences;
   static const String _ACCESS_TOKEN_KEY = "access_token";
   static const String _REFRESH_TOKEN_KEY = "refresh_token";
+  static const String _LAST_ACTIVE_SCREEN = "last_active_string";
 
   @override
   Future<void> initPrefs() async {
@@ -31,5 +32,22 @@ class SharedPreferenceService implements ISharedPreferences {
   @override
   void saveRefreshToken(String refreshToken) {
     _preferences.setString(_REFRESH_TOKEN_KEY, refreshToken);
+  }
+
+  @override
+  String? getLastActivePlaceID() {
+    return _preferences.getString(_LAST_ACTIVE_SCREEN);
+  }
+
+  @override
+  void saveLastActivePlaceID(String lastPlaceId) {
+    _preferences.setString(_LAST_ACTIVE_SCREEN, lastPlaceId);
+  }
+
+  @override
+  void logOut() {
+    _preferences.remove(_ACCESS_TOKEN_KEY);
+    _preferences.remove(_REFRESH_TOKEN_KEY);
+    _preferences.remove(_LAST_ACTIVE_SCREEN);
   }
 }

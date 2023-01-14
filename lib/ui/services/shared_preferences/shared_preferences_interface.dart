@@ -8,4 +8,9 @@ abstract class ISharedPreferences {
   void saveAccessToken(String accessToken);
 
   void saveRefreshToken(String refreshToken);
+
+  String? getLastActivePlaceID();
+
+  void saveLastActivePlaceID(String lastPlaceID);
+  void logOut();
 }

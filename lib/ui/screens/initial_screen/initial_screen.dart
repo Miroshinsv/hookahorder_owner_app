@@ -7,30 +7,33 @@ class InitialScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var provider = BlocProvider.of<InitialScreenCubit>(context);
     return SafeArea(
-      child: Scaffold(
-        body: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            const Image(
-              image: AssetImage("assets/img/initial_with_text.png"),
-            ),
-            const Padding(
-              padding: EdgeInsets.only(left: 8.0, right: 8.0),
-              child: LinearProgressIndicator(),
-            ),
-            BlocBuilder<InitialScreenCubit, InitialScreenState>(
-              builder: (context, state) {
-                if (state is InitialScreenInitial) {
-                  provider.checkUserCredentials(context);
-                  return Text(provider.state.text);
-                }
-                return Text("ERROR: Unknown state: $state");
-              },
-            ),
-          ],
+      child: BlocProvider(
+        create: (context) => InitialScreenCubit(),
+        child: Scaffold(
+          body: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              const Image(
+                image: AssetImage("assets/img/initial_with_text.png"),
+              ),
+              const Padding(
+                padding: EdgeInsets.only(left: 8.0, right: 8.0),
+                child: LinearProgressIndicator(),
+              ),
+              BlocBuilder<InitialScreenCubit, InitialScreenState>(
+                builder: (context, state) {
+                  var provider = BlocProvider.of<InitialScreenCubit>(context);
+                  if (state is InitialScreenInitial) {
+                    provider.checkUserCredentials(context);
+                    return Text(provider.state.text);
+                  }
+                  return Text("ERROR: Unknown state: $state");
+                },
+              ),
+            ],
+          ),
         ),
       ),
     );
