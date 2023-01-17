@@ -14,13 +14,14 @@ class OrderModel with _$OrderModel {
     String? comment,
     @JsonKey(name: "order_time") String? orderTime,
     @JsonKey(name: "user_id") required UserModel user,
+    @JsonKey(name: "created_at") required DateTime createdAt,
   }) = _OrderModel;
 
   int get getId => id;
   String? get getComment => comment;
   String? get getOrderTime => orderTime;
   UserModel get getUser => user;
-
+  DateTime get getCreateDate => createdAt;
 
   factory OrderModel.fromJson(Map<String, dynamic> json) =>
       _$OrderModelFromJson(json);

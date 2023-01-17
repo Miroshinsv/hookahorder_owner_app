@@ -19,8 +19,6 @@ class OrderScreenCubit extends Cubit<OrderScreenState> {
   @override
   Future<void> close() async {
     _isWatchStart = false;
-    print("close");
-    print(_isWatchStart);
     super.close();
   }
 
@@ -38,8 +36,8 @@ class OrderScreenCubit extends Cubit<OrderScreenState> {
         if (orders.length < resp.body!.length) {
           HapticFeedback.vibrate();
           FlutterRingtonePlayer.playNotification();
-          orders = resp.body!;
-          emit(OrderScreenNewOrdersUpdate(orders: orders));
+          orders = resp.body!.reversed.toList();
+          emit(OrderScreenNewOrdersUpdate(orders: orders,),);
         }
       } else {
         emit(

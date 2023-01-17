@@ -8,6 +8,7 @@ import 'package:hookahorder_owner_app/ui/screens/initial_screen/initial_screen.d
 import 'package:hookahorder_owner_app/ui/screens/initial_screen/initial_screen_cubit.dart';
 import 'package:hookahorder_owner_app/ui/screens/login_screen/login_screen.dart';
 import 'package:hookahorder_owner_app/ui/screens/main_screen/main_screen.dart';
+import 'package:hookahorder_owner_app/ui/screens/order_screen/order_screen.dart';
 import 'package:hookahorder_owner_app/ui/services/shared_preferences/shared_preferences_interface.dart';
 import 'package:hookahorder_owner_app/ui/theme/theme_data.dart';
 
@@ -23,6 +24,8 @@ void main() async {
       routes: {
         AppRoutes.LOGIN_SCREEN: (context) => const LoginScreen(),
         AppRoutes.MAIN_SCREEN: (context) => const MainScreen(),
+        AppRoutes.ORDER_SCREEN: (context) => const OrderScreen(),
+        AppRoutes.INITIAL_SCREEN: (context) => const InitialScreen(),
       },
       home: BlocProvider(
         create: (BuildContext context) => InitialScreenCubit(),
