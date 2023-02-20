@@ -7,6 +7,7 @@ import 'package:hookahorder_owner_app/ui/network/api_client_interface.dart';
 import 'package:hookahorder_owner_app/ui/services/auth_service/auth_service_interface.dart';
 import 'package:hookahorder_owner_app/ui/services/shared_preferences/shared_preferences_interface.dart';
 import 'package:injectable/injectable.dart';
+import 'package:jwt_decode/jwt_decode.dart';
 
 @LazySingleton(as: IAuthService, order: 1)
 class AuthService implements IAuthService {
@@ -26,7 +27,8 @@ class AuthService implements IAuthService {
   @override
   Future<bool> checkUserCredentials() async {
     final authToken = _preferences.getAccessToken();
-    if (authToken == null) {
+    if (authToken == null ||
+        Jwt.getExpiryDate(authToken)!.isBefore(DateTime.now())) {
       return false;
     }
     return true;

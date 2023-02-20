@@ -9,7 +9,7 @@ class UserServiceImpl implements IUserService {
   final UserApi _userApi = GetIt.I.get<IApiClient>().getUserApi();
 
   @override
-  Future<void> updateFMCToken(int userId, String token) async {
-    await _userApi.updateFCMToken(userId, {'fmc_token': token});
+  Future<void> updateFCMToken(int userId, String token) async {
+    await _userApi.updateFCMToken(userId, {'fcm_token': token});
   }
 }

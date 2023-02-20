@@ -11,28 +11,32 @@ class InitialScreen extends StatelessWidget {
       child: BlocProvider(
         create: (context) => InitialScreenCubit(),
         child: Scaffold(
-          body: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              const Image(
-                image: AssetImage("assets/img/initial_with_text.png"),
-              ),
-              const Padding(
-                padding: EdgeInsets.only(left: 8.0, right: 8.0),
-                child: LinearProgressIndicator(),
-              ),
-              BlocBuilder<InitialScreenCubit, InitialScreenState>(
-                builder: (context, state) {
-                  var provider = BlocProvider.of<InitialScreenCubit>(context);
-                  if (state is InitialScreenInitial) {
-                    provider.checkUserCredentials(context);
-                    return Text(provider.state.text);
-                  }
-                  return Text("ERROR: Unknown state: $state");
-                },
-              ),
-            ],
+          body: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                const Image(
+                  image: AssetImage("assets/img/initial_with_text.png"),
+                ),
+                const SizedBox(height: 8),
+                const Padding(
+                  padding: EdgeInsets.only(left: 8.0, right: 8.0),
+                  child: LinearProgressIndicator(),
+                ),
+                BlocBuilder<InitialScreenCubit, InitialScreenState>(
+                  builder: (context, state) {
+                    var provider = BlocProvider.of<InitialScreenCubit>(context);
+                    if (state is InitialScreenInitial) {
+                      provider.checkUserCredentials(context);
+                      return Text(provider.state.text);
+                    }
+                    return Text("ERROR: Unknown state: $state");
+                  },
+                ),
+              ],
+            ),
           ),
         ),
       ),
