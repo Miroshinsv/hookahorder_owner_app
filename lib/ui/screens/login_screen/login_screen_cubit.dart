@@ -15,15 +15,12 @@ class LoginScreenCubit extends Cubit<LoginScreenState> {
   Future<void> sendAuthorization(
       String phone, String password, BuildContext context) async {
     emit(const LoginScreenSendRequestState(isRequestSend: true));
-    var response = await authService
-        .postAuth(AuthRequest(phone.replaceAll(RegExp(r"\D"), ""), password));
+    var response = await authService.postAuth(AuthRequest(phone.replaceAll(RegExp(r"\D"), ""), password));
     if (response.isSuccessful) {
       Navigator.pushReplacementNamed(context, AppRoutes.MAIN_SCREEN);
       return;
     }
-    emit(const LoginScreenErrorRequestState(
-        isRequestSend: false, errorText: "Неверный телефон и\\или пароль"));
-    Future.delayed(const Duration(seconds: 3))
-        .then((value) => emit(const LoginScreenInitial(isRequestSend: false)));
+    emit(const LoginScreenErrorRequestState(isRequestSend: false, errorText: "Неверный телефон и\\или пароль"));
+    Future.delayed(const Duration(seconds: 3)).then((value) => emit(const LoginScreenInitial(isRequestSend: false)));
   }
 }

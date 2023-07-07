@@ -1,5 +1,6 @@
-import 'package:bloc/bloc.dart';
+import 'package:collection/collection.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_ringtone_player/flutter_ringtone_player.dart';
 import 'package:get_it/get_it.dart';
 import 'package:hookahorder_owner_app/ui/models/order/order_model.dart';
@@ -33,11 +34,18 @@ class OrderScreenCubit extends Cubit<OrderScreenState> {
       if (!_isWatchStart) return;
       final resp = await _service.getAllOrders(placeId);
       if (resp.isSuccessful) {
-        if (orders.length < resp.body!.length) {
+        resp.body?.sort((v1, v2) {
+          return v2.getId.compareTo(v1.getId);
+        });
+        if (!const ListEquality().equals(orders, resp.body)) {
           HapticFeedback.vibrate();
           FlutterRingtonePlayer.playNotification();
-          orders = resp.body!.reversed.toList();
-          emit(OrderScreenNewOrdersUpdate(orders: orders,),);
+          orders = resp.body!;
+          emit(
+            OrderScreenNewOrdersUpdate(
+              orders: orders,
+            ),
+          );
         }
       } else {
         emit(
@@ -49,11 +57,26 @@ class OrderScreenCubit extends Cubit<OrderScreenState> {
     }
   }
 
+  Future<void> cancelOrder(int orderId) async {
+    await _service.setOrderCancel(orderId);
+  }
+
+  Future<void> takenOrder(int orderId) async {
+    await _service.setOrderTaken(orderId);
+  }
+
+  Future<void> completeOrder(int orderId) async {
+    await _service.setOrderComplete(orderId);
+  }
+
   Future<void> initialLoad(int placeId) async {
     emit(OrderScreenLoading());
     final resp = await _service.getAllOrders(placeId);
     if (resp.isSuccessful) {
       orders = resp.body!;
+      orders.sort((v1, v2) {
+        return v2.getId.compareTo(v1.getId);
+      });
       startWatchOrders(placeId);
       emit(
         OrderScreenNewOrdersUpdate(orders: orders),

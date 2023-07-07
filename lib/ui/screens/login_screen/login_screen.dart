@@ -8,8 +8,8 @@ class LoginScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    TextEditingController phoneController = TextEditingController(text: "79999999999");
-    TextEditingController passwordController = TextEditingController(text: "1234567890");
+    TextEditingController phoneController = TextEditingController();
+    TextEditingController passwordController = TextEditingController();
 
     return SafeArea(
       child: Scaffold(

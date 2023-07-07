@@ -10,4 +10,16 @@ abstract class OrderApi extends ChopperService {
   @Get(path: "/get/all/{placeId}")
   Future<Response<List<OrderModel>>> getOrderByCurrentPlaceId(
       @Path("placeId") int placeId);
+
+  @Post(path: "/taken/{id}")
+  Future<Response<OrderModel>> setOrderTaken(
+      @Path("id") int orderId);
+
+  @Post(path: "/complete/{id}")
+  Future<Response<OrderModel>> setOrderComplete(
+      @Path("id") int orderId);
+
+  @Post(path: "/cancel/{id}")
+  Future<Response<OrderModel>> setOrderCancel(
+      @Path("id") int orderId);
 }

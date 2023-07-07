@@ -20,8 +20,7 @@ class InitialScreenCubit extends Cubit<InitialScreenState> {
   Future<void> checkUserCredentials(BuildContext context) async {
     if (await _authService.checkUserCredentials()) {
       String? token = await FirebaseMessaging.instance.getToken();
-      Map<String, dynamic> payload =
-          Jwt.parseJwt(_preferences.getAccessToken()!);
+      Map<String, dynamic> payload = Jwt.parseJwt(_preferences.getAccessToken()!);
       await _userService.updateFCMToken(payload['userId'], token!);
       Navigator.pushReplacementNamed(context, AppRoutes.MAIN_SCREEN);
     } else {
