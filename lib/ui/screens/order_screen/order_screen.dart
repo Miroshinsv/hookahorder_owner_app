@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hookahorder_owner_app/ui/models/place/place_model.dart';
 import 'package:hookahorder_owner_app/ui/screens/order_screen/order_screen_cubit.dart';
+import 'package:intl/intl.dart';
 
 class OrderScreen extends StatelessWidget {
   const OrderScreen({super.key});
@@ -47,8 +48,8 @@ class OrderScreen extends StatelessWidget {
   Column _getLeadingIcon(String? status) {
     switch (status) {
       case "NEW":
-        return Column(
-          children: const [
+        return const Column(
+          children: [
             Icon(
               Icons.new_releases,
               color: Colors.amber,
@@ -57,8 +58,8 @@ class OrderScreen extends StatelessWidget {
           ],
         );
       case "TAKEN":
-        return Column(
-          children: const [
+        return const Column(
+          children: [
             Icon(
               Icons.takeout_dining,
               color: Colors.blue,
@@ -67,8 +68,8 @@ class OrderScreen extends StatelessWidget {
           ],
         );
       case "COMPLETED":
-        return Column(
-          children: const [
+        return const Column(
+          children: [
             Icon(
               Icons.check,
               color: Colors.green,
@@ -77,8 +78,8 @@ class OrderScreen extends StatelessWidget {
           ],
         );
       case "CANCELLED":
-        return Column(
-          children: const [
+        return const Column(
+          children: [
             Icon(
               Icons.cancel,
               color: Colors.redAccent,
@@ -87,8 +88,8 @@ class OrderScreen extends StatelessWidget {
           ],
         );
       default:
-        return Column(
-          children: const [Icon(Icons.question_mark), Text("Не известно")],
+        return const Column(
+          children: [Icon(Icons.question_mark), Text("Не известно")],
         );
     }
   }
@@ -104,115 +105,148 @@ class OrderScreen extends StatelessWidget {
             arguments.getName.toString(),
           ),
         ),
-        body: BlocProvider(
-          create: (context) => OrderScreenCubit(),
-          child: BlocBuilder<OrderScreenCubit, OrderScreenState>(
-            builder: (context, state) {
-              final provider = BlocProvider.of<OrderScreenCubit>(context);
-              if (state is OrderScreenInitial) {
-                provider.initialLoad(arguments.getId);
-                return const Center(
-                  child: Text("Initial"),
-                );
-              } else if (state is OrderScreenLoading) {
-                return const Center(
-                  child: CircularProgressIndicator(),
-                );
-              } else if (state is OrderScreenNewOrdersUpdate) {
-                return state.orders.isEmpty
-                    ? const Center(
-                        child: Text("Заказов нет"),
-                      )
-                    : ListView.separated(
-                        shrinkWrap: true,
-                        primary: false,
-                        itemCount: state.orders.length,
-                        separatorBuilder: (BuildContext context, int index) {
-                          return const Divider(
-                            height: 3.0,
-                            color: Colors.black,
-                          );
-                        },
-                        itemBuilder: (BuildContext context, int index) {
-                          var currentOrder = state.orders[index];
-                          return ListTile(
-                            leading:
-                                _getLeadingIcon(currentOrder.getOrderStatus),
-                            tileColor: currentOrder.getOrderStatus == "NEW"
-                                ? Colors.white12
-                                : Colors.white,
-                            trailing: Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: _getControlButtons(
-                                  currentOrder.getOrderStatus,
-                                  currentOrder.getId,
-                                  provider),
-                            ),
-                            title: Text("Заказ номер ${currentOrder.getId}"),
-                            subtitle: Column(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text.rich(
-                                  TextSpan(
+        body: SingleChildScrollView(
+          child: BlocProvider(
+            create: (context) => OrderScreenCubit(),
+            child: BlocBuilder<OrderScreenCubit, OrderScreenState>(
+              builder: (context, state) {
+                final provider = BlocProvider.of<OrderScreenCubit>(context);
+                if (state is OrderScreenInitial) {
+                  provider.initialLoad(arguments.getId);
+                  return const Center(
+                    child: Text("Initial"),
+                  );
+                } else if (state is OrderScreenLoading) {
+                  return const Center(
+                    child: CircularProgressIndicator(),
+                  );
+                } else if (state is OrderScreenNewOrdersUpdate) {
+                  return state.orders.isEmpty
+                      ? const Center(
+                          child: Text("Заказов нет"),
+                        )
+                      : Column(
+                          children: state.orders.entries
+                              .map((e) => Column(
                                     children: [
-                                      const TextSpan(text: "Время: \n"),
-                                      TextSpan(
-                                        text: currentOrder.getOrderTime,
+                                      Text(
+                                        DateFormat("dd-MM-yyyy")
+                                            .format(e.key)
+                                            .toString(),
                                         style: const TextStyle(
-                                          color: Colors.black,
                                           fontWeight: FontWeight.bold,
+                                          fontSize: 17.0
                                         ),
                                       ),
-                                    ],
-                                  ),
-                                ),
-                                Text.rich(
-                                  TextSpan(
-                                    children: [
-                                      const TextSpan(text: "Телефон\n"),
-                                      TextSpan(
-                                        text: currentOrder.getUser.phone,
-                                        style: const TextStyle(
-                                          color: Colors.black,
-                                          fontWeight: FontWeight.bold,
-                                        ),
+                                      ListView.separated(
+                                        shrinkWrap: true,
+                                        primary: false,
+                                        itemCount: e.value.length,
+                                        separatorBuilder:
+                                            (BuildContext context, int index) {
+                                          return const Divider(
+                                            height: 3.0,
+                                            color: Colors.black,
+                                          );
+                                        },
+                                        itemBuilder: (BuildContext context, int index) {
+                                          var currentOrder = e.value[index];
+                                          return ListTile(
+                                            leading: _getLeadingIcon(
+                                                currentOrder.getOrderStatus),
+                                            tileColor:
+                                                currentOrder.getOrderStatus ==
+                                                        "NEW"
+                                                    ? Colors.white12
+                                                    : Colors.white,
+                                            trailing: Row(
+                                              mainAxisSize: MainAxisSize.min,
+                                              children: _getControlButtons(
+                                                  currentOrder.getOrderStatus,
+                                                  currentOrder.getId,
+                                                  provider),
+                                            ),
+                                            title: Text(
+                                                "Заказ номер ${currentOrder.getId}"),
+                                            subtitle: Column(
+                                              mainAxisAlignment: MainAxisAlignment.start,
+                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                              children: [
+                                                Text.rich(
+                                                  TextSpan(
+                                                    children: [
+                                                      const TextSpan(
+                                                          text: "Время: \n"),
+                                                      TextSpan(
+                                                        text: currentOrder
+                                                            .getOrderTime,
+                                                        style: const TextStyle(
+                                                          color: Colors.black,
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                                Text.rich(
+                                                  TextSpan(
+                                                    children: [
+                                                      const TextSpan(
+                                                          text: "Телефон\n"),
+                                                      TextSpan(
+                                                        text: currentOrder
+                                                            .getUser.phone,
+                                                        style: const TextStyle(
+                                                          color: Colors.black,
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                                Text.rich(
+                                                  TextSpan(
+                                                    children: [
+                                                      const TextSpan(
+                                                          text:
+                                                              "Комментарий:\n"),
+                                                      TextSpan(
+                                                        text: currentOrder
+                                                                .getComment
+                                                                ?.getText ??
+                                                            "Не указан",
+                                                        style: const TextStyle(
+                                                          color: Colors.black,
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          );
+                                        },
                                       ),
                                     ],
-                                  ),
-                                ),
-                                Text.rich(
-                                  TextSpan(
-                                    children: [
-                                      const TextSpan(text: "Комментарий:\n"),
-                                      TextSpan(
-                                        text: currentOrder.getComment?.getText ?? "Не указан",
-                                        style: const TextStyle(
-                                          color: Colors.black,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-
-                              ],
-                            ),
-
-                          );
-                        },
-                      );
-              } else if (state is OrderScreenErrorState) {
+                                  ))
+                              .toList(),
+                        );
+                } else if (state is OrderScreenErrorState) {
+                  return Center(
+                    child: Text("Произошла ошибка: ${state.errorMsg}"),
+                  );
+                }
                 return Center(
-                  child: Text("Произошла ошибка: ${state.errorMsg}"),
+                  child: Text(
+                    "Unknown state: $state",
+                  ),
                 );
-              }
-              return Center(
-                child: Text(
-                  "Unknown state: $state",
-                ),
-              );
-            },
+              },
+            ),
           ),
         ),
       ),

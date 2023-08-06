@@ -8,7 +8,7 @@ class OrderScreenInitial extends OrderScreenState {}
 class OrderScreenLoading extends OrderScreenState {}
 
 class OrderScreenNewOrdersUpdate extends OrderScreenState {
-  final List<OrderModel> orders;
+  final Map<DateTime, List<OrderModel>> orders;
 
   OrderScreenNewOrdersUpdate({
     required this.orders,
@@ -16,7 +16,7 @@ class OrderScreenNewOrdersUpdate extends OrderScreenState {
 }
 
 class OrderScreenLoaded extends OrderScreenState {
-  final List<OrderModel> orders;
+  final Map<DateTime, List<OrderModel>> orders;
 
   OrderScreenLoaded({
     required this.orders,

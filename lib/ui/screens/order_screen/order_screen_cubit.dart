@@ -1,12 +1,8 @@
 import 'package:collection/collection.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_ringtone_player/flutter_ringtone_player.dart';
 import 'package:get_it/get_it.dart';
 import 'package:hookahorder_owner_app/ui/models/order/order_model.dart';
 import 'package:hookahorder_owner_app/ui/services/order_service/order_service_interface.dart';
-
-// import 'package:hookahorder_owner_app/ui/services/shared_preferences/shared_preferences_interface.dart';
 import 'package:meta/meta.dart';
 
 part 'order_screen_state.dart';
@@ -15,7 +11,7 @@ class OrderScreenCubit extends Cubit<OrderScreenState> {
   OrderScreenCubit() : super(OrderScreenInitial());
   bool _isWatchStart = false;
   final IOrderService _service = GetIt.I.get();
-  late List<OrderModel> orders;
+  Map<DateTime, List<OrderModel>>? orders;
 
   @override
   Future<void> close() async {
@@ -33,24 +29,18 @@ class OrderScreenCubit extends Cubit<OrderScreenState> {
       await Future.delayed(const Duration(seconds: 5));
       if (!_isWatchStart) return;
       final resp = await _service.getAllOrders(placeId);
-      if (resp.isSuccessful) {
-        resp.body?.sort((v1, v2) {
-          return v2.getId.compareTo(v1.getId);
-        });
-        if (!const ListEquality().equals(orders, resp.body)) {
-          HapticFeedback.vibrate();
-          FlutterRingtonePlayer.playNotification();
-          orders = resp.body!;
+      if (resp.$2 == null) {
+        if (!const MapEquality().equals(orders, resp.$1)) {
           emit(
             OrderScreenNewOrdersUpdate(
-              orders: orders,
+              orders: resp.$1!,
             ),
           );
         }
       } else {
         emit(
           OrderScreenErrorState(
-            errorMsg: resp.error.toString(),
+            errorMsg: resp.$2!,
           ),
         );
       }
@@ -72,19 +62,18 @@ class OrderScreenCubit extends Cubit<OrderScreenState> {
   Future<void> initialLoad(int placeId) async {
     emit(OrderScreenLoading());
     final resp = await _service.getAllOrders(placeId);
-    if (resp.isSuccessful) {
-      orders = resp.body!;
-      orders.sort((v1, v2) {
-        return v2.getId.compareTo(v1.getId);
-      });
+    if (resp.$2 == null) {
       startWatchOrders(placeId);
-      emit(
-        OrderScreenNewOrdersUpdate(orders: orders),
-      );
+      if (orders == null || const MapEquality().equals(orders, resp.$1)) {
+        orders = resp.$1!;
+        emit(
+          OrderScreenNewOrdersUpdate(orders: orders!),
+        );
+      }
     } else {
       emit(
         OrderScreenErrorState(
-          errorMsg: resp.error.toString(),
+          errorMsg: "Не удалось получить заказы\\n${resp.$2}",
         ),
       );
     }
