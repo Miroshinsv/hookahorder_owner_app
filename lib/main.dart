@@ -1,5 +1,5 @@
 import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
@@ -13,10 +13,11 @@ import 'package:hookahorder_owner_app/ui/screens/order_screen/order_screen.dart'
 import 'package:hookahorder_owner_app/ui/services/shared_preferences/shared_preferences_interface.dart';
 import 'package:hookahorder_owner_app/ui/theme/theme_data.dart';
 
-
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
+  if (!kIsWeb) {
+    await Firebase.initializeApp();
+  }
   configureDependencies();
   ISharedPreferences sharedPreferences = GetIt.I.get();
   await sharedPreferences.initPrefs();
