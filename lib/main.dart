@@ -15,9 +15,7 @@ import 'package:hookahorder_owner_app/ui/theme/theme_data.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  if (!kIsWeb) {
-    await Firebase.initializeApp();
-  }
+  await Firebase.initializeApp();
   configureDependencies();
   ISharedPreferences sharedPreferences = GetIt.I.get();
   await sharedPreferences.initPrefs();
